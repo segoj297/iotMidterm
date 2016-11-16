@@ -1,0 +1,73 @@
+<html>
+<head><title>Food Dump</title></head>
+<body>
+<h1>
+<div id = "dataContent"></div>
+<div id = "info"></div>
+<br>
+    <form>
+      <input id="inches" type="text" name="inches" placeholder="inches">
+      <input onclick="checkNumber()" id="submit" type="button" value="Enter">
+    </form> 
+</body>
+
+</html>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src= "https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+<script>
+var button = document.getElementById("button");
+var dataContent = document.getElementById("dataContent");
+
+
+  var socket = io.connect('192.168.1.120:8080');
+  socket.on('open', function (data) {
+    console.log("Connection open");
+    console.log("this is the" + data);
+    socket.emit('clientMessage', 'c');
+  });
+
+  socket.on('message', function(data) {
+  // console.log(data);
+  var dataArray = data.split('\r');
+  for (item of dataArray) {
+     console.log(item);
+     dataContent.innerHTML = "<p>" + data + "<p>";
+    }
+
+    if (dataArray <= "6") {
+      //info.innerHTML = "Come closer.";
+      document.body.style.backgroundColor = "#FF4500";
+    info.innerHTML = "Awwww.";
+      // document.body.style.backgroundColor = "#ffffff";
+    }
+
+     if (dataArray > "6") {
+      info.innerHTML = "Come closer.";
+      document.body.style.backgroundColor = "#ffffff";
+           
+    }
+
+ });
+
+  function checkNumber(){
+    var inches = document.getElementById("inches").value;
+    
+    if (inches <= 6) {
+      console.log("You sent back " + inches + " inches. Awww.");
+      info.innerHTML = "Awwww.";
+      document.body.style.backgroundColor = "#FF4500";
+
+    }
+     if (inches > 6)  {
+      console.log("You sent back " + inches + " inches. Come closer.");
+      info.innerHTML = "Come closer.";
+      document.body.style.backgroundColor = "#ffffff";
+
+    }
+
+
+} 
+
+</script>
